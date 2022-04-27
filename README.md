@@ -15,7 +15,7 @@ git clone https://github.com/Greder/buildsystem.git
 ```
 **cd:**
 ```bash
-cd buildsystem-hd2
+cd buildsystem
 ```
 **for first use:**
 ```bash
