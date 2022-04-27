@@ -11,7 +11,7 @@
 
 **git clone:**
 ```bash
-git clone https://github.com/Greder/buildsystem-hd2.git
+git clone https://github.com/Greder/buildsystem.git
 ```
 **cd:**
 ```bash
