@@ -1,0 +1,490 @@
+--- nhd2-exp.org/lib/libdvbsub/dvbsubtitle.cpp
++++ nhd2-exp/lib/libdvbsub/dvbsubtitle.cpp
+@@ -21,15 +21,16 @@
+ #include <libavformat/avformat.h>
+ #include <libavcodec/avcodec.h>
+ #include <libavutil/avutil.h>
++#include <libavcodec/version.h>
+ }
+ #include "driver/framebuffer.h"
+ #include "Debug.hpp"
+ 
+-//#if LIBAVCODEC_VERSION_INT <= AV_VERSION_INT(57, 1, 99)
+-//	#define CODEC_DVB_SUB CODEC_ID_DVB_SUBTITLE
+-//#else
++#if LIBAVCODEC_VERSION_INT <= AV_VERSION_INT(57, 1, 99)
++	#define CODEC_DVB_SUB CODEC_ID_DVB_SUBTITLE
++#else
+ 	#define CODEC_DVB_SUB AV_CODEC_ID_DVB_SUBTITLE
+-//#endif
++#endif
+ 
+ // Set these to 'true' for debug output:
+ static bool DebugConverter = false;
+--- nhd2-exp.org/lib/libeplayer3/container/container_ffmpeg.c
++++ nhd2-exp/lib/libeplayer3/container/container_ffmpeg.c
+@@ -30,22 +30,16 @@
+ #include <unistd.h>
+ #include <memory.h>
+ #include <string.h>
+-
+ #include <sys/stat.h>
+ #include <fcntl.h>
+ #include <errno.h>
+ #include <sys/poll.h>
+ #include <pthread.h>
+-
+ #include <libavutil/avutil.h>
+-#if LIBAVCODEC_VERSION_MAJOR > 54
+ #include <libavutil/time.h>
+-#endif
+ #include <libavformat/avformat.h>
+-#if LIBAVCODEC_VERSION_MAJOR > 54
+ #include <libavutil/opt.h>
+-#endif
+-
++#include <libavcodec/avcodec.h>
+ #include "common.h"
+ #include "misc.h"
+ #include "debug.h"
+@@ -64,9 +58,7 @@
+ #endif
+ 
+ 
+-#if LIBAVCODEC_VERSION_MAJOR > 54
+ #define AVCODEC_MAX_AUDIO_FRAME_SIZE 192000 // 1 second of 48khz 32bit audio
+-#endif
+ 
+ /* ***************************** */
+ /* Makros/Constants              */
+@@ -179,9 +171,6 @@
+ 			return "V_RMV";
+ 			
+ 		case AV_CODEC_ID_MPEG4:
+-#if LIBAVCODEC_VERSION_MAJOR < 53
+-		case CODEC_ID_XVID:
+-#endif
+ 		case AV_CODEC_ID_MSMPEG4V1:
+ 		case AV_CODEC_ID_MSMPEG4V2:
+ 		case AV_CODEC_ID_MSMPEG4V3:
+@@ -203,9 +192,7 @@
+ 			return "V_VC1";
+ 			
+ 		case AV_CODEC_ID_H264:
+-#if LIBAVCODEC_VERSION_MAJOR < 54
+-		case CODEC_ID_FFH264:
+-#endif
++
+ 			return "V_MPEG4/ISO/AVC";
+ 		
+ 		case AV_CODEC_ID_AVS:
+@@ -226,12 +213,7 @@
+ 		case AV_CODEC_ID_DTS:
+ 			return "A_DTS";
+ 		
+-//#if LIBAVCODEC_VERSION_INT > AV_VERSION_INT(52, 72, 2)			
+-//		case AV_CODEC_ID_EAC3:
+-//			return "A_EAC3";
+-//#endif			
+-			
+-		case AV_CODEC_ID_WMAV1:
++        case AV_CODEC_ID_WMAV1:
+ 		case AV_CODEC_ID_WMAV2:
+ 		case 86056: //CODEC_ID_WMAPRO
+ 			return "A_WMA";
+@@ -260,19 +242,12 @@
+ 		case AV_CODEC_ID_DVB_SUBTITLE:
+ 		case AV_CODEC_ID_XSUB:
+ 		case AV_CODEC_ID_MOV_TEXT:
+-#if LIBAVCODEC_VERSION_INT > AV_VERSION_INT(56, 72, 2)      
+ 		case AV_CODEC_ID_HDMV_PGS_SUBTITLE:
+-#endif
+-
+-#if LIBAVCODEC_VERSION_INT >= AV_VERSION_INT(52,38,1)
+ 		case AV_CODEC_ID_DVB_TELETEXT:
+-#endif      
+ 			return "S_TEXT/SRT"; /* fixme */
+ 		
+-#if LIBAVCODEC_VERSION_INT > AV_VERSION_INT(52, 72, 2)
+ 		case AV_CODEC_ID_SRT:
+ 			return "S_TEXT/SRT"; /* fixme */
+-#endif 
+ 
+ 		default:
+ 			if (codec->codec_type == AVMEDIA_TYPE_AUDIO)
+@@ -341,28 +316,16 @@
+ /* search for metatdata in context and stream
+  * and map it to our metadata.
+  */
+-#if LIBAVCODEC_VERSION_MAJOR < 54
+-static char* searchMeta(AVMetadata *metadata, char* ourTag)
+-#else
+ static char* searchMeta(AVDictionary * metadata, char* ourTag)
+-#endif
+ {
+-#if LIBAVCODEC_VERSION_MAJOR < 54
+-	AVMetadataTag *tag = NULL;
+-#else
+ 	AVDictionaryEntry *tag = NULL;
+-#endif
+ 	int i = 0;
+ 
+ 	while (metadata_map[i] != NULL)
+ 	{
+ 		if (strcmp(ourTag, metadata_map[i]) == 0)
+ 		{
+-#if LIBAVCODEC_VERSION_MAJOR < 54
+-			while ((tag = av_metadata_get(metadata, "", tag, AV_METADATA_IGNORE_SUFFIX)))
+-#else
+ 			while ((tag = av_dict_get(metadata, "", tag, AV_DICT_IGNORE_SUFFIX)))
+-#endif
+ 			{
+ 				if (strcmp(tag->key, metadata_map[ i + 1 ]) == 0)
+ 				{
+@@ -503,11 +466,7 @@
+ 			}
+ 			else
+ 			{
+-#if LIBAVCODEC_VERSION_MAJOR < 54
+-				lastSeek = currentReadPosition = url_ftell(avContext->pb);
+-#else
+ 				lastSeek = currentReadPosition = avio_tell(avContext->pb);
+-#endif
+ 				gotlastPts = 1;
+ 
+ #ifndef use_sec_to_seek
+@@ -547,11 +506,7 @@
+ 
+ 			int index = packet.stream_index;
+ 
+-#if LIBAVCODEC_VERSION_MAJOR < 54
+-			currentReadPosition = url_ftell(avContext->pb);
+-#else
+ 			currentReadPosition = avio_tell(avContext->pb);
+-#endif
+ 
+ 			if (context->manager->video->Command(context, MANAGER_GET_TRACK, &videoTrack) < 0)
+ 				ffmpeg_err("error getting video track\n");
+@@ -657,13 +612,7 @@
+ 						{
+ 							int decoded_data_size = samples_size;
+ 
+-#if LIBAVCODEC_VERSION_INT >= AV_VERSION_INT(57, 1, 99)
+ 							bytesDone = avcodec_decode_audio4(( (AVStream*) audioTrack->stream)->codec, (short *)(samples), &decoded_data_size, &avpkt);
+-#elif LIBAVCODEC_VERSION_INT >= AV_VERSION_INT(52, 64, 0)
+-							bytesDone = avcodec_decode_audio3(( (AVStream*) audioTrack->stream)->codec, (short *)(samples), &decoded_data_size, &avpkt);
+-#else
+-							bytesDone = avcodec_decode_audio2(( (AVStream*) audioTrack->stream)->codec, (short *)(samples), &decoded_data_size, avpkt.data, avpkt.size);
+-#endif
+ 
+ 							if(bytesDone < 0) // Error Happend
+ 							    break;
+@@ -793,11 +742,7 @@
+ 							AVSubtitle sub;
+ 							int got_sub_ptr;
+ 
+-#if LIBAVCODEC_VERSION_INT >= AV_VERSION_INT(52, 64, 0)			   
+ 							if (avcodec_decode_subtitle2(((AVStream*) subtitleTrack->stream)->codec, &sub, &got_sub_ptr, &packet) < 0)
+-#else
+-							if (avcodec_decode_subtitle( ((AVStream*) subtitleTrack->stream)->codec, &sub, &got_sub_ptr, packet.data, packet.size ) < 0)
+-#endif
+ 							{
+ 							    ffmpeg_err("error decoding subtitle\n");
+ 							} 
+@@ -930,19 +875,11 @@
+ 	ao_initialize();
+ #endif
+ 
+-#if LIBAVCODEC_VERSION_MAJOR < 54
+-	if ((err = av_open_input_file(&avContext, filename, NULL, 0, NULL)) != 0) 
+-#else
+ 	if ((err = avformat_open_input(&avContext, filename, NULL, 0)) != 0)
+-#endif
+ 	{
+ 		char error[512];
+ 
+-#if LIBAVCODEC_VERSION_MAJOR < 54
+-		ffmpeg_err("av_open_input_file failed %d (%s)\n", err, filename);
+-#else
+ 		ffmpeg_err("avformat_open_input failed %d (%s)\n", err, filename);
+-#endif
+ 		//av_strerror(err, error, 512);
+ 		ffmpeg_err("Cause: %s\n", error);
+ 
+@@ -960,26 +897,16 @@
+ 
+ 	ffmpeg_printf(20, "find_streaminfo\n");
+ 
+-#if LIBAVCODEC_VERSION_MAJOR < 54
+-	if (av_find_stream_info(avContext) < 0) 
+-	{
+-		ffmpeg_err("Error av_find_stream_info\n");
+-#else
+ 	if (avformat_find_stream_info(avContext, NULL) < 0) 
+ 	{
+ 		ffmpeg_err("Error avformat_find_stream_info\n");
+-#endif
+ 
+ #ifdef this_is_ok
+ 		/* crow reports that sometimes this returns an error
+ 		* but the file is played back well. so remove this
+ 		* until other works are done and we can prove this.
+ 		*/
+-#if LIBAVFORMAT_VERSION_MAJOR < 54
+- 		av_close_input_file(avContext);
+-#else
+ 		avformat_close_input(&avContext);
+-#endif		
+ 		releaseMutex(FILENAME, __FUNCTION__,__LINE__);
+ 		return cERR_CONTAINER_FFMPEG_STREAM;
+ #endif
+@@ -987,11 +914,7 @@
+ 
+ 	ffmpeg_printf(20, "dump format\n");
+ 
+-#if LIBAVCODEC_VERSION_MAJOR < 54
+-	dump_format(avContext, 0, filename, 0);
+-#else
+ 	av_dump_format(avContext, 0, filename, 0);
+-#endif
+ 
+ 	ffmpeg_printf(1, "number streams %d\n", avContext->nb_streams);
+ 
+@@ -1015,11 +938,8 @@
+ 		switch (stream->codec->codec_type) 
+ 		{
+ 			// video
+-#if LIBAVCODEC_VERSION_INT >= AV_VERSION_INT(52, 64, 0)	  
+ 			case AVMEDIA_TYPE_VIDEO:
+-#else
+-			case CODEC_TYPE_VIDEO:
+-#endif        
++
+ 			ffmpeg_printf(10, "CODEC_TYPE_VIDEO %d\n",stream->codec->codec_type);
+ 
+ 			if (encoding != NULL) 
+@@ -1093,11 +1013,7 @@
+ 			break;
+ 	    
+ 			// audio codec
+-#if LIBAVCODEC_VERSION_INT >= AV_VERSION_INT(52, 64, 0)	  
+ 			case AVMEDIA_TYPE_AUDIO:
+-#else
+-			case CODEC_TYPE_AUDIO:
+-#endif        
+ 			ffmpeg_printf(10, "CODEC_TYPE_AUDIO %d\n",stream->codec->codec_type);
+ 
+ 			if (encoding != NULL) 
+@@ -1105,17 +1021,9 @@
+ 				track.type = eTypeES;
+ 				
+ 				// language description
+-#if LIBAVCODEC_VERSION_MAJOR < 54
+-				AVMetadataTag *lang;
+-#else
+ 				AVDictionaryEntry *lang;
+-#endif
+ 
+-#if LIBAVCODEC_VERSION_MAJOR < 54
+-				lang = av_metadata_get(stream->metadata, "language", NULL, 0);
+-#else
+ 				lang = av_dict_get(stream->metadata, "language", NULL, 0);
+-#endif
+ 
+ 				if (lang)
+ 					track.Name = strdup(lang->value);
+@@ -1148,11 +1056,7 @@
+ 
+ 				AVCodec *codec = avcodec_find_decoder(stream->codec->codec_id);
+ 
+-#if LIBAVCODEC_VERSION_MAJOR < 54
+-				if(codec != NULL && !avcodec_open(stream->codec, codec))
+-#else
+ 				if(codec != NULL && !avcodec_open2(stream->codec, codec, NULL))
+-#endif					  
+ 					printf("AVCODEC__INIT__SUCCESS\n");
+ 				else
+ 					printf("AVCODEC__INIT__FAILED\n");
+@@ -1332,21 +1236,12 @@
+ 			break;
+ 	    
+ 			// subtitle
+-#if LIBAVCODEC_VERSION_INT >= AV_VERSION_INT(52, 64, 0)
+ 			case AVMEDIA_TYPE_SUBTITLE:
+ 			{
+-#if LIBAVCODEC_VERSION_MAJOR < 54
+-				AVMetadataTag * lang;
+-#else
+ 				AVDictionaryEntry * lang;
+-#endif
+ 				ffmpeg_printf(10, "CODEC_TYPE_SUBTITLE %d\n",stream->codec->codec_type);
+ 
+-#if LIBAVCODEC_VERSION_MAJOR < 54
+-				lang = av_metadata_get(stream->metadata, "language", NULL, 0);
+-#else
+ 				lang = av_dict_get(stream->metadata, "language", NULL, 0);
+-#endif	     
+ 
+ 				if (lang)
+ 					track.Name        = strdup(lang->value);
+@@ -1407,7 +1302,7 @@
+ 			default:
+ 				ffmpeg_err("not handled or unknown codec_type %d\n", stream->codec->codec_type);
+ 				break;	 
+-#endif	 
++
+ 		} /* switch (stream->codec->codec_type) */
+ 
+ 	} /* for */
+@@ -1504,12 +1399,7 @@
+ 
+ 	if (avContext != NULL) 
+ 	{
+-#if LIBAVFORMAT_VERSION_MAJOR < 54
+- 		av_close_input_file(avContext);
+- 		avContext = NULL;
+-#else
+ 		avformat_close_input(&avContext);
+-#endif		
+ 	}
+ 
+ 	isContainerRunning = 0;
+@@ -1531,11 +1421,7 @@
+ static int container_ffmpeg_seek_bytes(off_t pos) 
+ {
+ 	int flag = AVSEEK_FLAG_BYTE;
+-#if LIBAVCODEC_VERSION_MAJOR < 54
+-	off_t current_pos = url_ftell(avContext->pb);
+-#else
+ 	off_t current_pos = avio_tell(avContext->pb);
+-#endif
+ 
+ 	ffmpeg_printf(20, "seeking to position %lld (bytes)\n", pos);
+ 
+@@ -1548,11 +1434,7 @@
+ 		return cERR_CONTAINER_FFMPEG_ERR;
+ 	}    
+ 
+-#if LIBAVCODEC_VERSION_MAJOR < 54
+-	ffmpeg_printf(30, "current_pos after seek %lld\n", url_ftell(avContext->pb));
+-#else
+ 	ffmpeg_printf(30, "current_pos after seek %lld\n", avio_tell(avContext->pb));
+-#endif
+ 
+ 	return cERR_CONTAINER_FFMPEG_NO_ERROR;
+ }
+@@ -1562,11 +1444,7 @@
+ {
+ 	int flag = AVSEEK_FLAG_BYTE;
+ 	off_t newpos;
+-#if LIBAVCODEC_VERSION_MAJOR < 54
+-	off_t current_pos = url_ftell(avContext->pb);
+-#else
+ 	off_t current_pos = avio_tell(avContext->pb);
+-#endif
+ 
+ 	if (start == -1)
+ 		start = current_pos;
+@@ -1595,11 +1473,7 @@
+ 		return cERR_CONTAINER_FFMPEG_ERR;
+ 	}    
+ 
+-#if LIBAVCODEC_VERSION_MAJOR < 54
+-	ffmpeg_printf(30, "current_pos after seek %lld\n", url_ftell(avContext->pb));
+-#else
+ 	ffmpeg_printf(30, "current_pos after seek %lld\n", avio_tell(avContext->pb));
+-#endif
+ 
+ 	return cERR_CONTAINER_FFMPEG_NO_ERROR;
+ }
+@@ -1630,11 +1504,7 @@
+ 
+ 	if (pos == -1)
+ 	{
+-#if LIBAVCODEC_VERSION_MAJOR < 54
+-		pos = url_ftell(avContext->pb);
+-#else
+ 		pos = avio_tell(avContext->pb);
+-#endif
+ 	}
+ 
+ 	if (pts == -1)
+@@ -1763,11 +1633,7 @@
+  * about 10 seconds, backward does not work.
+  */
+ 
+-#if LIBAVCODEC_VERSION_MAJOR < 54
+-		off_t pos = url_ftell(avContext->pb);
+-#else
+ 		off_t pos = avio_tell(avContext->pb);
+-#endif
+ 
+ 		ffmpeg_printf(10, "pos %lld %d\n", pos, avContext->bit_rate);
+ 
+--- neutrino-hd2.org/src/driver/rcinput.cpp
++++ neutrino-hd2/src/driver/rcinput.cpp
+@@ -115,6 +115,7 @@
+ 			
+ #if defined (__sh__)
+ 	key_home = configfile.getInt32("key_home", KEY_HOME);
++    key_exit = configfile.getInt32("key_exit", KEY_EXIT);
+ #else
+ 	key_home = configfile.getInt32("key_home", 0xAE);
+ #endif			
+@@ -272,6 +273,7 @@
+ 	configfile.setInt32("key_standby", key_standby);
+ 			
+ 	configfile.setInt32("key_home", key_home);
++    configfile.setInt32("key_exit", key_exit);
+ 			
+ 	configfile.setInt32("key_setup", key_setup);
+ 				
+@@ -557,7 +559,7 @@
+ 	{
+ 		g_RCInput->getMsgAbsoluteTimeout(&msg, &data, &timeoutEnd);
+ 
+-		if ( ( msg == RC_timeout ) || ( msg == RC_home ) || ( msg == RC_ok ) )
++        if ( ( msg == RC_timeout ) || ( msg == RC_home ) || ( msg == RC_exit ) || ( msg == RC_ok ) )
+ 		{
+ 			doLoop = false;
+ 		}
+@@ -1636,6 +1638,9 @@
+ 		case RC_home:
+ 			return "RC_home";
+ 
++		case RC_exit:
++			return "RC_home";
++
+ 		case RC_setup:
+ 			return "RC_setup";
+ 
+@@ -1862,6 +1867,7 @@
+ 	else if (code == key_down) return RC_down;
+ 	else if (code == key_right) return RC_right;
+ 	else if (code == key_home) return RC_home;
++    else if (code == key_exit) return RC_home;
+ 			
+ 	/* special */
+ 	else if (code == key_recall) return RC_recall;
+--- nhd2-exp.org/src/neutrino.h
++++ nhd2-exp/src/neutrino.h
+@@ -263,13 +263,13 @@
+ 		void lockPlayBack(void);
+ 		void unlockPlayBack(void);
+ 		
+-		// 0 - restart 
+-		// 1 - shutdown
+-		// 2 - reboot
++		// 0 - halt
++		// 1 - reboot
++		// 2 - restart
+ 		enum {
+-			RESTART = 0,
+-			SHUTDOWN,
+-			REBOOT
++			SHUTDOWN = 0,
++			REBOOT,
++			RESTART
+ 		};
+ 		
+ 		void ExitRun(int retcode = SHUTDOWN, bool save = true);
