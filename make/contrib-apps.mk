@@ -1,13 +1,9 @@
 #
 # busybox
 #
-BUSYBOX_VER = 1.29.3
+BUSYBOX_VER = 1.34.0
 BUSYBOX_SOURCE = busybox-$(BUSYBOX_VER).tar.bz2
-BUSYBOX_PATCH  = busybox-$(BUSYBOX_VER)-nandwrite.patch
-BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-unicode.patch
-BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-extra.patch
-BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-extra2.patch
-BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-flashcp-small-output.patch
+BUSYBOX_PATCH  = $(PATCHES)/busybox/$(BUSYBOX_VER)
 
 $(ARCHIVE)/$(BUSYBOX_SOURCE):
 	$(WGET) https://busybox.net/downloads/$(BUSYBOX_SOURCE)
