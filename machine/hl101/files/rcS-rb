@@ -140,6 +140,8 @@ else
    fi
 fi
 
+/etc/init.d/amixer start
+
 echo "[rcS] LOADING neutrino"
 echo "Start Neutrino" > /dev/vfd
 
