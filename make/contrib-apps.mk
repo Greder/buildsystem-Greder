@@ -1,20 +1,24 @@
 #
 # busybox
 #
-BUSYBOX_VER = 1.34.1
+BUSYBOX_VER = 1.29.3
 BUSYBOX_SOURCE = busybox-$(BUSYBOX_VER).tar.bz2
 BUSYBOX_PATCH  = busybox-$(BUSYBOX_VER)-nandwrite.patch
 BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-unicode.patch
 BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-extra.patch
 BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-extra2.patch
 BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-flashcp-small-output.patch
-BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-block-telnet-internet.patch
-BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-recursive_action-fix.patch
 
 $(ARCHIVE)/$(BUSYBOX_SOURCE):
 	$(WGET) https://busybox.net/downloads/$(BUSYBOX_SOURCE)
 
+ifeq ($(BOXARCH), $(filter $(BOXARCH), arm))
+BUSYBOX_CONFIG = busybox-$(BUSYBOX_VER).config_arm
+else ifeq ($(BOXTYPE), $(filter $(BOXTYPE), spark spark7162 ufs912 ufs913))
+BUSYBOX_CONFIG = busybox-$(BUSYBOX_VER).config_nandwrite
+else
 BUSYBOX_CONFIG = busybox-$(BUSYBOX_VER).config
+endif
 
 $(D)/busybox: $(D)/bootstrap $(ARCHIVE)/$(BUSYBOX_SOURCE) $(PATCHES)/$(BUSYBOX_CONFIG)
 	$(START_BUILD)
@@ -376,11 +380,10 @@ $(D)/e2fsprogs: $(D)/bootstrap $(D)/util_linux $(ARCHIVE)/$(E2FSPROGS_SOURCE)
 #
 # util_linux
 #
-UTIL_LINUX_MAJOR = 2.37
-UTIL_LINUX_MINOR = .4
+UTIL_LINUX_MAJOR = 2.36
+UTIL_LINUX_MINOR = .1
 UTIL_LINUX_VER = $(UTIL_LINUX_MAJOR)$(UTIL_LINUX_MINOR)
 UTIL_LINUX_SOURCE = util-linux-$(UTIL_LINUX_VER).tar.xz
-UTIL_LINUX_PATCH = util-linux-$(UTIL_LINUX_MAJOR)$(UTIL_LINUX_MINOR).patch
 
 $(ARCHIVE)/$(UTIL_LINUX_SOURCE):
 	$(WGET) https://www.kernel.org/pub/linux/utils/util-linux/v$(UTIL_LINUX_MAJOR)/$(UTIL_LINUX_SOURCE)
@@ -390,7 +393,6 @@ $(D)/util_linux: $(D)/bootstrap $(D)/zlib $(ARCHIVE)/$(UTIL_LINUX_SOURCE)
 	$(REMOVE)/util-linux-$(UTIL_LINUX_VER)
 	$(UNTAR)/$(UTIL_LINUX_SOURCE)
 	$(CHDIR)/util-linux-$(UTIL_LINUX_VER); \
-		$(call apply_patches, $(UTIL_LINUX_PATCH)); \
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--mandir=/.remove \
@@ -427,6 +429,7 @@ $(D)/util_linux: $(D)/bootstrap $(D)/zlib $(ARCHIVE)/$(UTIL_LINUX_SOURCE)
 			--disable-mesg \
 			--disable-raw \
 			--disable-rename \
+			--disable-reset \
 			--disable-vipw \
 			--disable-newgrp \
 			--disable-chfn-chsh \
@@ -453,7 +456,6 @@ $(D)/util_linux: $(D)/bootstrap $(D)/zlib $(ARCHIVE)/$(UTIL_LINUX_SOURCE)
 			--disable-makeinstall-setuid \
 			--without-audit \
 			--without-ncurses \
-			--without-ncursesw \
 			--without-slang \
 			--without-utempter \
 			--disable-wall \
@@ -952,7 +954,7 @@ $(D)/shairport: $(D)/bootstrap $(D)/openssl $(D)/howl $(D)/alsa_lib
 	$(REMOVE)/shairport
 	set -e; if [ -d $(ARCHIVE)/shairport.git ]; \
 		then cd $(ARCHIVE)/shairport.git; git pull; \
-		else cd $(ARCHIVE); git clone -b 1.0-dev git://github.com/abrasive/shairport.git shairport.git; \
+		else cd $(ARCHIVE); git clone -b 1.0-dev https://github.com/abrasive/shairport.git shairport.git; \
 		fi
 	cp -ra $(ARCHIVE)/shairport.git $(BUILD_TMP)/shairport
 	$(CHDIR)/shairport; \
@@ -1862,5 +1864,3 @@ $(D)/minisatip: $(D)/bootstrap $(D)/openssl $(D)/libdvbcsa $(D)/dvb-apps $(ARCHI
 	cp -a $(BUILD_TMP)/minisatip/html $(TARGET_DIR)/usr/share/minisatip
 	$(REMOVE)/minisatip
 	$(TOUCH)
-
-
