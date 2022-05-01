@@ -16,7 +16,7 @@ diff --git a/Makefile.in b/Makefile.in
 index 9560a95..d444bd6 100644
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -350,7 +350,7 @@ LIBCURRENT = @LIBCURRENT@
+@@ -352,7 +352,7 @@ LIBCURRENT = @LIBCURRENT@
  LIBOBJS = @LIBOBJS@
  LIBREVISION = @LIBREVISION@
  LIBS = @LIBS@
@@ -27,4 +27,3 @@ index 9560a95..d444bd6 100644
  LTLIBOBJS = @LTLIBOBJS@
 -- 
 2.7.4
-
