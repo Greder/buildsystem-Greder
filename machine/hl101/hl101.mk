@@ -1,4 +1,4 @@
-BOXARCH = sh4
+BOXARCH ?= sh4
 OPTIMIZATIONS ?= size
 WLAN ?= 
 MEDIAFW ?= buildinplayer
