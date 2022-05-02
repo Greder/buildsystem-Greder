@@ -65,7 +65,7 @@ $(D)/oscam.do_compile:
 		CC_OPTS=" -Os -pipe "
 	touch $@
 
-$(D)/oscam: bootstrap oscam.do_prepare oscam.do_compile
+$(D)/oscam: $(D)/bootstrap $(D)/openssl $(D)/libusb oscam.do_prepare oscam.do_compile
 	rm -rf $(TARGET_DIR)/../build_oscam
 	mkdir $(TARGET_DIR)/../build_oscam
 	cp -pR $(SOURCE_DIR)/oscam-svn/Distribution/* $(TARGET_DIR)/../build_oscam/
