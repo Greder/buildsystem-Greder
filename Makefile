@@ -26,7 +26,7 @@ init:
 # box	
 	@echo -e "\nBox:"
 	@echo "   1) Gi-s980"
-	@echo "   2) Opticum-HD"
+	@echo -e "   \033[01;32m2) Opticum-HD\033[00m"
 	@read -p "Select optimization (1-2)? " BOX; \
 	BOX=$${BOX}; \
 	case "$$BOX" in \
@@ -37,7 +37,7 @@ init:
 # tuner	
 	@echo -e "\nTuner:"
 	@echo "   1) RB"
-	@echo "   2) ST"
+	@echo -e "   \033[01;32m2) ST\033[00m"
 	@read -p "Select optimization (1-2)? " TUNER; \
 	TUNER=$${TUNER}; \
 	case "$$TUNER" in \
@@ -59,7 +59,7 @@ init:
 # WLAN driver
 	@echo -e "\nDo you want to build WLAN drivers and tools"
 	@echo "   1) no"
-	@echo "   2) yes (includes WLAN drivers and tools)"
+	@echo -e "   \033[01;32m2) yes (includes WLAN drivers and tools)\033[00m"
 	@read -p "Select to build (1-2)? " WLAN; \
 	WLAN=$${WLAN}; \
 	case "$$WLAN" in \
