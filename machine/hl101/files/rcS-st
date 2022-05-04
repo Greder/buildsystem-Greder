@@ -100,9 +100,6 @@ insmod $MODDIR/platform.ko
 insmod $MODDIR/bpamem.ko
 mknod /dev/bpamem c 153 0
 
-if [ -e /boot/bootlogo.mvi ]; then
-   showiframe -p /boot/bootlogo.mvi &
-fi
 stfbcontrol a 0
 
 echo "[rcS] Init remote control (LOAD 2)"
@@ -151,17 +148,17 @@ do
    echo "[rcS] Starting neutrino ->"
    /usr/local/bin/neutrino
    rtv=$?
-   echo "[rcS] Neutrino ended <- return value: " $rtv
+   echo "neutrino ended <- RTV: " $rtv
    case "$rtv" in
-      0) echo "SHUTDOWN"
-         echo "Shutdown" > /dev/vfd
-         init 0;;
-      1) echo "REBOOT"
-         echo "Reboot" > /dev/vfd
-         init 6;;
-      3) echo "RESTART"
+      0) echo "RESTART"
          echo "Restart" > /dev/vfd
          ;;
+      1) echo "SHUTDOWN"
+         echo "Shutdown" > /dev/vfd
+         init 0;;
+      2) echo "REBOOT"
+         echo "REBOOT" > /dev/vfd
+         init 6;;
       *) echo "ERROR"
          echo "Error " > /dev/vfd
          init 6;;
