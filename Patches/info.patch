@@ -118,3 +118,21 @@
  		
  		// service
  		nMenu->addItem(new CMenuForwarder(_("System"), true, NULL, new CServiceMenu(), NULL, RC_nokey, NULL, NEUTRINO_ICON_MENUITEM_SERVICE));
+@@ -338,17 +338,6 @@
+ 					menu->addItem(menu_item, false);
+ 				}
+ 				break;	
+-				
+-			// plugins
+-			case SNeutrinoSettings::ITEM_PLUGIN:
+-				{
+-					//menu_items++;
+-					menu_prev = SNeutrinoSettings::ITEM_PLUGIN;
+-					keyhelper.get(&key, &icon, RC_blue);
+-					menu_item = new CMenuForwarder(_("Plugins"), true, NULL, new CPluginList(), "-1", key, icon, NEUTRINO_ICON_MENUITEM_PLUGIN);
+-					menu->addItem(menu_item, false);
+-				}
+-				break;
+ 
+ 			default:
+ 				dprintf(DEBUG_NORMAL, "[neutrino] WARNING! menu wrong item!!\n");
