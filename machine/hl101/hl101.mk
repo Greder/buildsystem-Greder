@@ -5,7 +5,6 @@ MEDIAFW ?= buildinplayer
 LUA ?=lua
 PYTHON ?=
 CICAM ?= ci-cam
-SCART ?=
 LCD ?= vfd
 FKEYS ?=
 
@@ -217,7 +216,7 @@ ifeq ($(EMU), oscam)
 	cp $(TARGET_DIR)/../build_oscam/doc/example/oscam.conf $(RELEASE_DIR)/var/keys
 	cp $(TARGET_DIR)/../build_oscam/doc/example/oscam.user $(RELEASE_DIR)/var/keys
 	cp $(TARGET_DIR)/../build_oscam/doc/example/oscam.server $(RELEASE_DIR)/var/keys
-	install -m 0755 $(BASE_DIR)/machine/$(BOXTYPE)/files/setemu $(RELEASE_DIR)/usr/bin/cam/
+	install -m 0777 $(BASE_DIR)/machine/$(BOXTYPE)/files/setemu $(RELEASE_DIR)/usr/bin/cam/
 	install -m 0755 $(BASE_DIR)/machine/$(BOXTYPE)/files/start-emu.sh $(RELEASE_DIR)/usr/bin/cam/
 endif
 

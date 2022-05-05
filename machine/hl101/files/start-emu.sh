@@ -2,7 +2,7 @@
 
 killall oscam
 killall mgcamd
-killall wicardd-sh4
+killall wicardd
 
 emu=`cat /usr/bin/cam/setemu`
 
@@ -12,6 +12,6 @@ fi
 if [ $emu == "mgcamd" ]; then
 /usr/bin/cam/mgcamd -c /var/keys &
 fi
-if [ $emu == "wicardd-sh4" ]; then
-/usr/bin/cam/wicardd-sh4 /var/keys/wicardd.conf & 
+if [ $emu == "wicardd" ]; then
+/usr/bin/cam/wicardd /var/etc/wicardd.conf & 
 fi
