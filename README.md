@@ -1,13 +1,13 @@
 <h1 align="center">How to build image Neutrino-HD2 (mohousch)</h1>
 <h1 align="center">for hl101:</h1>
 
-![](https://github.com/mohousch/neutrinohd2/blob/master/nhd2-exp/doc/resources/mainmenu.png)
+![](https://github.com/Greder/doc/blob/main/screenshot1.png)
 
-![](https://github.com/mohousch/neutrinohd2/blob/master/nhd2-exp/doc/resources/channellist.png)
+![](https://github.com/Greder/doc/blob/main/screenshot4.png)
 
-![](https://github.com/mohousch/neutrinohd2/blob/master/nhd2-exp/doc/resources/infoviewer.bmp)
+![](https://github.com/Greder/doc/blob/main/screenshot5.png)
 
-![](https://github.com/mohousch/neutrinohd2/blob/master/nhd2-exp/doc/resources/metrixhd.png)
+![](https://github.com/Greder/doc/blob/main/screenshot2.png)
 
 **git clone:**
 ```bash
