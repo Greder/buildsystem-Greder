@@ -5,7 +5,7 @@ MEDIAFW ?= buildinplayer
 LUA ?=lua
 PYTHON ?=
 CICAM ?= ci-cam
-SCART ?= scart
+SCART ?=
 LCD ?= vfd
 FKEYS ?=
 
