@@ -101,3 +101,20 @@
  }
 -
 -
+--- nhd2-exp.org/src/neutrino_menue.cpp
++++ nhd2-exp/src/neutrino_menue.cpp
+@@ -106,14 +106,6 @@
+ 
+ 		// radio modus
+ 		nMenu->addItem(new CMenuForwarder(_("Radio Mode"), true, NULL, this, "radio", RC_nokey, NULL, NEUTRINO_ICON_MENUITEM_RADIO));	
+-			
+-#if defined (ENABLE_SCART)
+-		// scart
+-		nMenu->addItem(new CMenuForwarder(_("Scart Mode"), true, NULL, this, "scart", RC_nokey, NULL, NEUTRINO_ICON_MENUITEM_SCART));
+-#endif
+-
+-		// mediaplayer
+-		nMenu->addItem(new CMenuForwarder(_("Media Player"), true, NULL, new CMediaPlayerMenu(), NULL, RC_nokey, NULL, NEUTRINO_ICON_MENUITEM_MEDIAPLAYER));
+ 		
+ 		// service
+ 		nMenu->addItem(new CMenuForwarder(_("System"), true, NULL, new CServiceMenu(), NULL, RC_nokey, NULL, NEUTRINO_ICON_MENUITEM_SERVICE));
