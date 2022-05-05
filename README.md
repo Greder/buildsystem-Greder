@@ -9,6 +9,8 @@
 
 ![](https://github.com/Greder/doc/blob/main/screenshot2.png)
 
+![](https://github.com/Greder/doc/blob/main/screenshot6.png)
+
 **git clone:**
 ```bash
 git clone https://github.com/Greder/buildsystem.git
