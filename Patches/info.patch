@@ -142,3 +142,14 @@
  
  			default:
  				dprintf(DEBUG_NORMAL, "[neutrino] WARNING! menu wrong item!!\n");
+--- nhd2-exp.org/src/gui/update.cpp
++++ nhd2-exp/src/gui/update.cpp
+@@ -77,7 +77,7 @@
+ 
+ #define LIST_OF_UPDATES_LOCAL_FILENAME 		"update.list"
+ #define RELEASE_CYCLE                  		PACKAGE_VERSION
+-#define RELEASE_TYPE					"Snapshot" // FIXME:
++#define RELEASE_TYPE					"lilo (4.3) - 30.04.22" // FIXME:
+ #define FILEBROWSER_UPDATE_FILTER      		"img"
+ 
+ #define MTD_OF_WHOLE_IMAGE             		0
