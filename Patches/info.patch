@@ -17,11 +17,11 @@
  	const char * releaseCycle = PACKAGE_VERSION;
  	//releaseCycle = versionInfo.getReleaseCycle();
 -	const char * imageType = "Snapshot"; //FIXME:
-+	const char * imageType = "ffmpeg-2.8.19"; //FIXME:
++	const char * imageType = "lilo (4.3) - 30.04.22"; //FIXME:
  	//imageType = versionInfo.getType();
  
  	// image name
-@@ -182,7 +183,7 @@
+@@ -182,70 +183,42 @@
  	ypos += iheight;
  	paintLine(xpos, font_info, _("Built date: "));
  	paintLine(xpos + x_offset, font_info, _(__DATE__));
@@ -30,26 +30,32 @@
  
  	// git rev
  	//ypos += iheight;
-@@ -194,58 +195,30 @@
- 	paintLine(xpos, font_info, _("Type:"));
- 	paintLine(xpos + x_offset, font_info, imageType);
- 
--	// 
--	ypos += iheight;
--
--	// doko
+ 	//paintLine(xpos, font_info, GIT_REV);
+ 	//paintLine(xpos + x_offset, font_info, gitrev );	
+ 	
+-	// image type
 +	// git
  	ypos += iheight;
--	paintLine(xpos, font_info, _("Docs:"));
--	paintLine(xpos + x_offset, font_info, docs);
+-	paintLine(xpos, font_info, _("Type:"));
+-	paintLine(xpos + x_offset, font_info, imageType);
 +	paintLine(xpos, font_info, _("Git:"));
 +	paintLine(xpos + x_offset, font_info, homepage);
  
+ 	// 
+ 	ypos += iheight;
+ 
+-	// doko
+-	ypos += iheight;
+-	paintLine(xpos, font_info, _("Docs:"));
+-	paintLine(xpos + x_offset, font_info, docs);
+-
 -	// forum
-+	// 
++	// image type
  	ypos += iheight;
 -	paintLine(xpos, font_info, _("Forum:"));
 -	paintLine(xpos + x_offset, font_info, forum);
++	paintLine(xpos, font_info, _("Release:"));
++	paintLine(xpos + x_offset, font_info, imageType);
  
 -	// homepage
 +	// creater
@@ -69,24 +75,24 @@
 -
 -	ypos += sheight;
 -	paintLine(xpos + x_offset, font_small, "the Free Software Foundation; either version 2 of the License, or");
--
--	ypos += sheight;
--	paintLine(xpos + x_offset, font_small, "(at your option) any later version.");
--
--	ypos += sheight;
--	paintLine(xpos + x_offset, font_small, "This program is distributed in the hope that it will be useful,");
 +	paintLine(xpos, font_info, _("Info:"));
 +	paintLine(xpos + x_offset, font_small, "This program is free software.");
  
  	ypos += sheight;
--	paintLine(xpos + x_offset, font_small, "but WITHOUT ANY WARRANTY; without even the implied warranty of");
+-	paintLine(xpos + x_offset, font_small, "(at your option) any later version.");
 +	paintLine(xpos + x_offset, font_small, "My git for creating the image of neutrinoHD2 for the Opticum9500");
  
  	ypos += sheight;
--	paintLine(xpos + x_offset, font_small, "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.");
+-	paintLine(xpos + x_offset, font_small, "This program is distributed in the hope that it will be useful,");
 +	paintLine(xpos + x_offset, font_small, "https://github.com/Greder/buildsystem");
  
  	ypos += sheight;
+-	paintLine(xpos + x_offset, font_small, "but WITHOUT ANY WARRANTY; without even the implied warranty of");
+-
+-	ypos += sheight;
+-	paintLine(xpos + x_offset, font_small, "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.");
+-
+-	ypos += sheight;
 -	paintLine(xpos + x_offset, font_small, "See the GNU General Public License for more details.");
 -
 -	ypos += sheight;
