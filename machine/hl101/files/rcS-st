@@ -140,27 +140,31 @@ else
    fi
 fi
 
-echo "[rcS] LOADING neutrino"
-echo "Start Neutrino" > /dev/vfd
-
 until false
 do
-   echo "[rcS] Starting neutrino ->"
+   echo "[rcS] Starting neutrino GUI ->"
    /usr/local/bin/neutrino
    rtv=$?
-   echo "neutrino ended <- RTV: " $rtv
+   echo "GUI ended <- RTV: " $rtv
    case "$rtv" in
-      0) echo "RESTART"
-         echo "Restart" > /dev/vfd
-         ;;
-      1) echo "SHUTDOWN"
-         echo "Shutdown" > /dev/vfd
-         init 0;;
-      2) echo "REBOOT"
-         echo "Reboot" > /dev/vfd
-         init 6;;
-      *) echo "ERROR"
-         echo "Error " > /dev/vfd
-         init 6;;
+      0) echo "$rtv"
+              echo "RESTART"
+              echo "Restart" > /dev/vfd
+              ;;
+      1) echo "$rtv"
+              echo "SHUTDOWN"
+              echo "Shutdown" > /dev/vfd
+              init 0
+              ;;
+      2) echo "$rtv"
+              echo "REBOOT"
+              echo "Reboot" > /dev/vfd
+              init 6
+              ;;
+      *) echo "*"
+              echo -e "\033[01;31mERROR: $rtv\033[00m"
+              echo "Error: $rtv" > /dev/vfd
+              init 6
+              ;;
    esac
 done
