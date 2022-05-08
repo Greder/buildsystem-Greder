@@ -18,18 +18,18 @@
  
 +static struct bpa2_partition_desc bpa2_parts_table[] = {
 + {
-+         .name = "LMI_VID",
++         .name  = "LMI_VID",
 +         .start = 0x10800000,
-+         .size = 0x06800000,
++         .size  = 0x06800000,
 +         .flags = 0,
-+         .aka = LMI_VID_partalias
++         .aka   = LMI_VID_partalias
 + },
 + {
-+         .name = "LMI_SYS",
++         .name  = "LMI_SYS",
 +         .start = 0,
-+         .size = 0x01700000,
++         .size  = 0x01700000,
 +         .flags = 0,
-+         .aka = LMI_SYS_partalias
++         .aka   = LMI_SYS_partalias
 + }
 +};
  
