@@ -13,21 +13,21 @@
 +#define MB442_PIO_STE100P_RESET stm_gpio(3, 6)
  #define MB442_PIO_FLASH_VPP stm_gpio(2, 7)
  
-+const char *LMI_VID_partalias[] = { "BPA2_Region1", "coredisplay-video", "gfx-memory", "v4l2-video-buffers", NULL };
-+const char *LMI_SYS_partalias[] = { "BPA2_Region0", "bigphysarea", "v4l2-coded-video-buffers", NULL };
++const char *LMI_VID_partalias[] = { "BPA2_Region1", "coredisplay-video", "gfx-memory", "v4l2-video-buffers", "v4l2-coded-video-buffers", NULL };
++const char *LMI_SYS_partalias[] = { "BPA2_Region0", "bigphysarea", NULL };
  
 +static struct bpa2_partition_desc bpa2_parts_table[] = {
 + {
 +         .name = "LMI_VID",
 +         .start = 0x10800000,
-+         .size = 0x03800000,
++         .size = 0x06800000,
 +         .flags = 0,
 +         .aka = LMI_VID_partalias
 + },
 + {
 +         .name = "LMI_SYS",
 +         .start = 0,
-+         .size = 0x01400000,
++         .size = 0x01700000,
 +         .flags = 0,
 +         .aka = LMI_SYS_partalias
 + }
