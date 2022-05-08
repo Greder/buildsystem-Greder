@@ -56,7 +56,7 @@ GITHUB               ?= https://github.com
 endif
 GIT_NAME             ?= mohousch
 GIT_NAME_DRIVER      ?= Greder
-GIT_NAME_APPS        ?= mohousch
+GIT_NAME_APPS        ?= Greder
 GIT_NAME_FLASH       ?= mohousch
 GIT_NAME_HOSTAPPS    ?= mohousch
 
