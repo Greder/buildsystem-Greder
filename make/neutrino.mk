@@ -125,7 +125,7 @@ ifeq ($(FKEYS), fkeys)
 NHD2_OPTS += --enable-functionkeys
 endif
 
-NEUTRINO_HD2_PATCHES = info.patch
+NEUTRINO_HD2_PATCHES =
 
 $(D)/neutrinohd2.do_prepare: $(NEUTRINO_DEPS)
 	$(START_BUILD)
