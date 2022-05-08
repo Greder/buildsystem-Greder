@@ -157,15 +157,10 @@ do
          echo "Shutdown" > /dev/vfd
          init 0;;
       2) echo "REBOOT"
-         echo "REBOOT" > /dev/vfd
+         echo "Reboot" > /dev/vfd
          init 6;;
       *) echo "ERROR"
          echo "Error " > /dev/vfd
          init 6;;
    esac
 done
-
-#never reached
-echo "REBOOT SpiderBox HL-101 Neutrino" > /dev/vfd
-echo "REBOOT SpiderBox HL-101 Neutrino"
-init 6
