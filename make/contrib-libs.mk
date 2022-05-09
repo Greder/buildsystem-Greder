@@ -2514,11 +2514,11 @@ $(D)/harfbuzz: $(ARCHIVE)/$(HARFBUZZ_SOURCE) $(D)/bootstrap $(D)/libglib2 $(D)/c
 #
 # libnsl
 #
-LIBNSL_VER    = 1.2.0
+LIBNSL_VER = 1.2.0
 LIBNSL_SOURCE = libnsl-$(LIBNSL_VER).tar.gz
 
 $(ARCHIVE)/$(LIBNSL_SOURCE):
-	$(WGET) https://github.com/thkukuk/libnsl/archive/v1.2.0/$(LIBNSL_SOURCE)
+	https://github.com/thkukuk/libnsl/archive/v$(LIBNSL_VER)/$(LIBNSL_SOURCE)
 
 $(D)/libnsl: $(D)/bootstrap $(ARCHIVE)/$(LIBNSL_SOURCE)
 	$(START_BUILD)
