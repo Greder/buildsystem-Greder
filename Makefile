@@ -279,18 +279,18 @@ update:
 		fi; \
 	fi
 	@echo;
-	@if test -d $(FLASH_DIR); then \
-		cd $(FLASH_DIR)/; \
-		echo '==================================================================='; \
-		echo '      updating $(GIT_NAME_FLASH)-flash git repository'; \
-		echo '==================================================================='; \
-		echo; \
-		if [ "$(GIT_STASH_PULL)" = "stashpull" ]; then \
-			git stash && git stash show -p > ./pull-stash-flash.patch || true && git pull && git stash pop || true; \
-		else \
-			git pull; \
-		fi; \
-	fi
+#	@if test -d $(FLASH_DIR); then \
+#		cd $(FLASH_DIR)/; \
+#		echo '==================================================================='; \
+#		echo '      updating $(GIT_NAME_FLASH)-flash git repository'; \
+#		echo '==================================================================='; \
+#		echo; \
+#		if [ "$(GIT_STASH_PULL)" = "stashpull" ]; then \
+#			git stash && git stash show -p > ./pull-stash-flash.patch || true && git pull && git stash pop || true; \
+#		else \
+#			git pull; \
+#		fi; \
+#	fi
 	@echo;
 	@if test -d $(HOSTAPPS_DIR); then \
 		cd $(HOSTAPPS_DIR)/; \
