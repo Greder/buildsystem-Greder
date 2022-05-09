@@ -139,7 +139,7 @@ $(D)/neutrinohd2.do_prepare: $(NEUTRINO_DEPS)
 		$(call apply_patches,$(NEUTRINO_HD2_PATCHES))
 	@touch $@
 
-$(D)/neutrinohd2.config.status:
+$(D)/neutrinohd2.config.status: $(D)/neutrinohd2.do_prepare
 	cd $(SOURCE_DIR)/neutrinohd2/nhd2-exp; \
 		./autogen.sh; \
 		$(BUILDENV) \
@@ -161,7 +161,7 @@ $(D)/neutrinohd2.do_compile: $(D)/neutrinohd2.config.status
 		$(MAKE) all
 	@touch $@
 
-$(D)/neutrino: $(D)/neutrinohd2.do_prepare $(D)/neutrinohd2.do_compile
+$(D)/neutrino: $(D)/neutrinohd2.do_compile
 	$(MAKE) -C $(SOURCE_DIR)/neutrinohd2/nhd2-exp install DESTDIR=$(TARGET_DIR)
 	make $(TARGET_DIR)/.version
 	touch $(D)/$(notdir $@)
@@ -187,7 +187,7 @@ $(D)/neutrinohd2-plugins.do_prepare: $(D)/neutrinohd2.do_prepare
 		$(call apply_patches, $(NEUTRINO_HD2_PLUGINS_PATCHES))
 	@touch $@
 
-$(D)/neutrinohd2-plugins.config.status: $(D)/bootstrap neutrino
+$(D)/neutrinohd2-plugins.config.status: neutrino
 	cd $(SOURCE_DIR)/neutrinohd2/plugins; \
 		./autogen.sh; \
 		$(BUILDENV) \
@@ -227,6 +227,3 @@ neutrino-plugins-distclean:
 #
 #
 PHONY += $(TARGET_DIR)/.version
-
-
-
