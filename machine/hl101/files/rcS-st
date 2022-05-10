@@ -140,9 +140,10 @@ else
    fi
 fi
 
+echo "[rcS] Starting neutrino GUI ->"
+
 until false
 do
-   echo "[rcS] Starting neutrino GUI ->"
    /usr/local/bin/neutrino
    rtv=$?
    echo "GUI ended <- RTV: " $rtv
