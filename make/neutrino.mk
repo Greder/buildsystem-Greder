@@ -210,7 +210,6 @@ $(D)/neutrinohd2-plugins.do_compile: $(D)/neutrinohd2-plugins.config.status
 
 $(D)/neutrino-plugins: $(D)/neutrinohd2-plugins.do_compile
 	$(MAKE) -C $(SOURCE_DIR)/neutrinohd2/plugins install DESTDIR=$(TARGET_DIR)
-
 	touch $(D)/$(notdir $@)
 	$(TUXBOX_CUSTOMIZE)
 
