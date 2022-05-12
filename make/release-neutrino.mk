@@ -6,6 +6,7 @@ release-neutrino: release-none $(D)/neutrino $(D)/neutrino-plugins
 	cp -rf $(TARGET_DIR)/.version $(RELEASE_DIR)/
 	cp -rf $(TARGET_DIR)/var/tuxbox/* $(RELEASE_DIR)/var/tuxbox
 	cp -rf $(TARGET_DIR)/usr/share/tuxbox/* $(RELEASE_DIR)/usr/share/tuxbox
+	cp -rf $(SKEL_ROOT)/var/tuxbox/* $(RELEASE_DIR)/var/tuxbox
 #
 # lib usr/lib
 #

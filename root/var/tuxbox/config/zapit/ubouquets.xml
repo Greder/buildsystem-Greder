@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zapit api="4">
+    <Bouquet name="Мультики">
+        <S i="520" n="Канал Disney" t="d" on="70" frq="11785" s="360"/>
+        <S i="459" n="Карусель" t="b" on="70" frq="12341" s="360"/>
+        <S i="71b" n="Gulli Girl" t="12" on="70" frq="11977" s="360"/>
+    </Bouquet>
+</zapit>
+<!-- File was created in DemonEditor. Enjoy watching! -->
