@@ -140,7 +140,7 @@ else
    fi
 fi
 
-echo "[rcS] Starting neutrino GUI ->"
+echo "[rcS] Starting neutrino ->"
 
 until false
 do
